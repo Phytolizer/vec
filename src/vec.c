@@ -6,6 +6,7 @@
  */
 
 #include "vec.h"
+#include <gc.h>
 
 int vec_expand_(char **data, int *length, int *capacity, int memsz)
 {
@@ -13,7 +14,7 @@ int vec_expand_(char **data, int *length, int *capacity, int memsz)
     {
         void *ptr;
         int n = (*capacity == 0) ? 1 : *capacity << 1;
-        ptr = realloc(*data, n * memsz);
+        ptr = GC_realloc(*data, n * memsz);
         if (ptr == NULL)
             return -1;
         *data = ptr;
@@ -27,7 +28,7 @@ int vec_reserve_(char **data, int *length, int *capacity, int memsz, int n)
     (void)length;
     if (n > *capacity)
     {
-        void *ptr = realloc(*data, n * memsz);
+        void *ptr = GC_realloc(*data, n * memsz);
         if (ptr == NULL)
             return -1;
         *data = ptr;
@@ -59,7 +60,7 @@ int vec_compact_(char **data, int *length, int *capacity, int memsz)
     {
         void *ptr;
         int n = *length;
-        ptr = realloc(*data, n * memsz);
+        ptr = GC_realloc(*data, n * memsz);
         if (ptr == NULL)
             return -1;
         *capacity = n;
